@@ -1,14 +1,25 @@
 import React from "react";
 import burger from "../../images/burger.jpg";
 import styled from "styled-components";
+import { useParams, usePrompt } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getCart, getShops } from "../../redux";
+import { useState } from "react";
 
 const List = styled.ul`
   display: grid;
-  width: 70vw;
+  max-height: 650px;
+  overflow-y: scroll;
 
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  max-width: 70vw;
+
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-auto-rows: minmax(200px, auto);
-  gap: 20px;
+  gap: 10px;
+`;
+const ListItem = styled.li`
+  margin: 0;
+  padding: 0;
 `;
 
 const Thumb = styled.div`
@@ -16,7 +27,6 @@ const Thumb = styled.div`
   flex-direction: column;
   border: 1px solid grey;
   width: 200px;
-  //   height: 200px;
 `;
 const Image = styled.img`
   width: 200px;
@@ -52,25 +62,36 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-export default function ProductList({ products, onClick }) {
+export default function ProductList({ onClick }) {
+  const params = useParams();
+  const { data } = useSelector(getShops);
+  const { cart } = useSelector(getCart);
+
+  const render = data.filter((item) => item.name === params.shop);
+
   return (
-    <>
-      <List>
-        {products.map((product) => (
-          <li key={product.id}>
-            <Thumb to={product.name}>
-              <Image src={burger} />
-              <ProductTitle>{product.name}</ProductTitle>{" "}
-              <Wrapper>
-                <Price>$ {product.price}</Price>
-                <Button type="button" onClick={onClick}>
-                  Add
-                </Button>
-              </Wrapper>
-            </Thumb>
-          </li>
-        ))}
-      </List>
-    </>
+    data && (
+      <>
+        <List>
+          {render[0].products.map((product) => (
+            <ListItem key={product.id}>
+              <Thumb to={product.name}>
+                <Image src={burger} />
+                <ProductTitle>{product.name}</ProductTitle>{" "}
+                <Wrapper>
+                  <Price>$ {product.price}</Price>
+                  <Button
+                    type="button"
+                    onClick={() => onClick({ product, params })}
+                  >
+                    Add
+                  </Button>
+                </Wrapper>
+              </Thumb>
+            </ListItem>
+          ))}
+        </List>
+      </>
+    )
   );
 }

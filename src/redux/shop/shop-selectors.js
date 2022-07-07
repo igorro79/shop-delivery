@@ -1,5 +1,1 @@
-const getShops = (state) => state.shops;
-
-export const selectors = {
-  getShops,
-};
+export const getShops = (state) => state.shops;

@@ -1,10 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getShopList } from "../../shared/api/shopApi";
 
-const fetchShopList = createAsyncThunk("region", async () => {
+const fetchShopList = createAsyncThunk("shops", async () => {
   try {
     const res = await getShopList();
-
     return res;
   } catch (error) {
     console.log(error);

@@ -9,12 +9,7 @@ const Wrapper = styled.div`
   padding: 50px 40px;
 `;
 const Left = styled.div``;
-const Right = styled.div`
-  flex-grow: auto;
-`;
-// const handleClick = function () {
-//   console.log();
-// };
+const Right = styled.div``;
 
 export default function Home({ shopList }) {
   return (

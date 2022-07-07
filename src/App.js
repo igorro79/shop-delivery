@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "./redux/store";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/home/Home";
 import Cart from "./pages/cart/Cart";
@@ -10,42 +9,46 @@ import ProductList from "./components/productList/ProductList";
 import { Outlet } from "react-router-dom";
 import Header from "./components/header/Header";
 import "./App.css";
-import { getShopList } from "./shared/api/shopApi";
+// import { getShopList } from "./shared/api/shopApi";
 import operation from "./redux/shop/shop-operations";
-import { selectors } from "./redux/shop/shop-selectors";
+import { add, erase } from "./redux/cart/cart-slice";
+import { getShops } from "./redux";
 
 function App() {
-  const [shopList, setShopList] = useState([]);
-  const data = useSelector(selectors.getShops);
-  console.log(data);
-
+  const { data } = useSelector(getShops);
   const dispatch = useDispatch();
+
+  const handleAddButton = function ({ params, product }) {
+    const object = {
+      id: Date.now(),
+      shop: params.shop,
+      item: product,
+      quantity: 1,
+    };
+    dispatch(add(object));
+  };
 
   useEffect(() => {
     dispatch(operation.fetchShopList());
-  }, []);
+  }, [dispatch]);
 
   return (
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route path="home" element={<Home shopList={shopList} />}>
-          {shopList.map((shop) => (
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home shopList={data} />}>
+          {data.map((shop) => (
             <Route
               key={shop.id}
               path=":shop"
-              element={<ProductList products={shop.products} />}
+              element={<ProductList onClick={handleAddButton} />}
             />
           ))}
         </Route>
-        <Route path="cart" element={<Cart />} />{" "}
-        <Route path="/" element={<Navigate to="home" replace />} />
-      </Route>
-    </Routes>
-
-    // <div>
-    //   <Header />
-    //   <Outlet />
-    // </div>
+        <Route path="cart" element={<Cart />} />
+      </Routes>
+      <Outlet />
+    </>
   );
 }
 

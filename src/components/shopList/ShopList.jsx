@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 const List = styled.ul`
   display: flex;
+
   flex-direction: column;
   align-items: stretch;
   width: 200px;
@@ -30,9 +31,11 @@ const CustomLink = styled(NavLink)`
     background-color: grey;
     color: #fff;
   }
-
+  &.active {
+    background-color: green;
+    color: #fff;
+  }
   &: visited {
-    color: inherit;
     &:hover {
       background-color: grey;
       color: #fff;
