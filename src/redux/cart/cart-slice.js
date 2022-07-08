@@ -16,13 +16,11 @@ export const cartSlice = createSlice({
       if (
         state.cart.some(
           (item) =>
-            item.shop === payload.shop &&
-            Number(item.item.id) === Number(payload.item.id)
+            item.shop === payload.shop && item.item.name === payload.item.name
         )
       ) {
         state.cart.forEach((item) =>
-          item.shop === payload.shop &&
-          Number(item.item.id) === Number(payload.item.id)
+          item.shop === payload.shop && item.item.name === payload.item.name
             ? (item.quantity += 1)
             : null
         );
@@ -31,7 +29,7 @@ export const cartSlice = createSlice({
 
     changeQuantity: (state, { payload }) => {
       state.cart.forEach((item) =>
-        Number(item.id) === Number(payload.itemId) && item.quantity >= 1
+        item.id === payload.itemId && Number(item.quantity) >= 1
           ? (item.quantity = Number(payload.newValue))
           : null
       );
@@ -42,7 +40,9 @@ export const cartSlice = createSlice({
         (item) => Number(item.id) !== Number(payload)
       );
     },
-    erase: (state) => (state = initialState),
+    erase: (state) => {
+      state.cart = [];
+    },
   },
   extraReducers: {
     [operation.postOrder.pending]: (state) => {
@@ -50,7 +50,7 @@ export const cartSlice = createSlice({
     },
 
     [operation.postOrder.fulfilled]: (state, { payload }) => {
-      state.lastOrder = payload;
+      state.lastOrder = payload.data;
     },
 
     [operation.postOrder.rejected]: (state, { error }) => {
@@ -62,7 +62,7 @@ export const cartSlice = createSlice({
     },
 
     [operation.fetchOrders.fulfilled]: (state, { payload }) => {
-      state.ordersHistory = [...payload];
+      state.ordersHistory = payload;
     },
 
     [operation.fetchOrders.rejected]: (state, { error }) => {

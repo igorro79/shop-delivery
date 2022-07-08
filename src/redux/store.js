@@ -2,12 +2,12 @@ import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import {
   persistStore,
   persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  REGISTER,
-  PURGE,
-  PERSIST,
+  // FLUSH,
+  // REHYDRATE,
+  // PAUSE,
+  // REGISTER,
+  // PURGE,
+  // PERSIST,
 } from "redux-persist";
 import logger from "redux-logger";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
@@ -16,9 +16,7 @@ import cartReducer from "./cart/cart-slice";
 
 const middleware = [
   ...getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
+    serializableCheck: false,
   }),
   logger,
 ];

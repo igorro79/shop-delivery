@@ -1,17 +1,16 @@
 import React from "react";
 import burger from "../../images/burger.jpg";
 import styled from "styled-components";
-import { useParams, usePrompt } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getCart, getShops } from "../../redux";
-import { useState } from "react";
 
 const List = styled.ul`
   display: grid;
-  max-height: 650px;
+  max-height: 420px;
   overflow-y: scroll;
 
-  max-width: 70vw;
+  max-width: 700px;
 
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-auto-rows: minmax(200px, auto);
@@ -74,7 +73,7 @@ export default function ProductList({ onClick }) {
       <>
         <List>
           {render[0].products.map((product) => (
-            <ListItem key={product.id}>
+            <ListItem key={product.name}>
               <Thumb to={product.name}>
                 <Image src={burger} />
                 <ProductTitle>{product.name}</ProductTitle>{" "}
@@ -82,7 +81,7 @@ export default function ProductList({ onClick }) {
                   <Price>$ {product.price}</Price>
                   <Button
                     type="button"
-                    onClick={() => onClick({ product, params })}
+                    onClick={() => onClick({ product, params, cart })}
                   >
                     Add
                   </Button>

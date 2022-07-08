@@ -1,31 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Routes, Route, Outlet } from "react-router-dom";
+import operation from "./redux/shop/shop-operations";
+import { add, erase } from "./redux/cart/cart-slice";
+import { getShops } from "./redux";
 
-import { Routes, Route } from "react-router-dom";
+import "./App.css";
 
 import Home from "./pages/home/Home";
 import Cart from "./pages/cart/Cart";
 import ProductList from "./components/productList/ProductList";
-import { Outlet } from "react-router-dom";
 import Header from "./components/header/Header";
-import "./App.css";
-// import { getShopList } from "./shared/api/shopApi";
-import operation from "./redux/shop/shop-operations";
-import { add, erase } from "./redux/cart/cart-slice";
-import { getShops } from "./redux";
 
 function App() {
   const { data } = useSelector(getShops);
   const dispatch = useDispatch();
 
-  const handleAddButton = function ({ params, product }) {
-    const object = {
-      id: Date.now(),
-      shop: params.shop,
-      item: product,
-      quantity: 1,
-    };
-    dispatch(add(object));
+  const handleAddButton = function ({ params, product, cart }) {
+    // ============= check for products from different shop in cart ================
+    if (cart.length && cart[0].shop !== params.shop) {
+      const answer = window.confirm(
+        "You have products from another shop in you cart. Want to clean the cart?"
+      );
+      if (answer) {
+        const object = {
+          id: Date.now(),
+          shop: params.shop,
+          item: product,
+          quantity: 1,
+        };
+        dispatch(erase());
+        dispatch(add(object));
+      }
+    }
+    //================================
+    else {
+      const object = {
+        id: Date.now(),
+        shop: params.shop,
+        item: product,
+        quantity: 1,
+      };
+      dispatch(add(object));
+    }
   };
 
   useEffect(() => {
@@ -39,7 +56,7 @@ function App() {
         <Route path="/" element={<Home shopList={data} />}>
           {data.map((shop) => (
             <Route
-              key={shop.id}
+              key={shop._id}
               path=":shop"
               element={<ProductList onClick={handleAddButton} />}
             />

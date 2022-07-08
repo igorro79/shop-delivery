@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const List = styled.ul`
@@ -7,7 +7,7 @@ const List = styled.ul`
 
   flex-direction: column;
   align-items: stretch;
-  width: 200px;
+  width: 300px;
   color: black;
   padding: 30px 20px;
   border: 3px solid silver;
@@ -35,11 +35,17 @@ const CustomLink = styled(NavLink)`
     background-color: green;
     color: #fff;
   }
+
   &: visited {
     &:hover {
       background-color: grey;
       color: #fff;
     }
+  }
+  &.disabled {
+    pointer-events: none;
+    cursor: default;
+    box-shadow: none;
   }
 `;
 
@@ -47,8 +53,10 @@ export default function ShopList({ shopList }) {
   return (
     <List>
       {shopList.map((shop) => (
-        <li key={shop.id}>
-          <CustomLink to={shop.name}>{shop.name}</CustomLink>
+        <li key={shop._id}>
+          <CustomLink data-name="shops" to={shop.name}>
+            {shop.name}
+          </CustomLink>
         </li>
       ))}
     </List>

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import React from "react";
 import { getCart } from "../../redux";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,10 +6,22 @@ import CartList from "../../components/cartList/CartList";
 import { useState } from "react";
 import { erase } from "../../redux/cart/cart-slice";
 import operations from "../../redux/cart/cart-operations";
+import { Container } from "../../components/container/Container";
+
 const Form = styled.form`
   font-size: 20px;
   width: 90%;
   padding: 50px 40px;
+`;
+
+// ================= google map TODO
+const Map = styled.div`
+  display: inline-block;
+  width: 100%;
+  height: 200px;
+  border: 2px dashed grey;
+  border-radius: 5px;
+  background-color: lightgrey;
 `;
 const Wrapper = styled.div`
   display: flex;
@@ -21,7 +32,6 @@ const Credentials = styled.div`
   display: flex;
   flex-direction: column;
   width: 400px;
-  // padding: 50px 40px;
   margin-right: 50px;
   & :not(:last-child) {
     margin-bottom: 10px;
@@ -33,7 +43,6 @@ const Input = styled.input`
   border-radius: 5px;
 `;
 const Total = styled.span`
-  // display: inline-block;
   font-size: 30px;
   font-weight: 700;
   margin-left: auto;
@@ -41,8 +50,6 @@ const Total = styled.span`
 `;
 
 const SubmitButton = styled.input`
-  font-size: 20px;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,6 +58,7 @@ const SubmitButton = styled.input`
   border-radius: 5px;
   background-color: orange;
   cursor: pointer;
+  font-size: 20px;
   &:hover {
     background-color: gold;
   }
@@ -58,11 +66,6 @@ const SubmitButton = styled.input`
 export default function Cart() {
   const { cart } = useSelector(getCart);
   const dispatch = useDispatch();
-
-  const orderDate = function () {
-    const current = new Date(Date.now());
-    return current.toLocaleDateString();
-  };
 
   const total = cart.reduce(function (acc, next) {
     return acc + next.item.price * next.quantity;
@@ -73,90 +76,101 @@ export default function Cart() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
+  const newData = cart.map((product) =>
+    Object.create(
+      {},
+      {
+        name: { value: product.item.name },
+        price: { value: product.item.price },
+        quantity: { value: product.quantity },
+      }
+    )
+  );
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const order = {
+
+    const newOrder = {
       name: name,
       email: email,
       phone: phone,
       address: address,
-      order: cart,
+      shop: cart[0].shop,
+      order: newData,
       sum: total,
-      date: orderDate(),
     };
-    console.log(order);
-    // dispatch(operations.postOrder(order));
-    // dispatch(erase);
+
+    console.log(newOrder);
+    dispatch(operations.postOrder(newOrder));
+    alert("You order has been added. ");
+    dispatch(erase());
   };
 
-  // useEffect(() => {
-  //   dispatch(erase());
-  // }, []);
   return (
-    <Form onSubmit={handleSubmit}>
-      <Wrapper>
-        <Credentials>
-          <label htmlFor="name">First name:</label>
-
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-
-          <label htmlFor="email">Email:</label>
-          <Input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <label htmlFor="phone">Phone:</label>
-          <Input
-            type="tel"
-            id="phone"
-            name="phone"
-            placeholder="Enter phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-
-          <label htmlFor="address">address:</label>
-          <Input
-            type="text"
-            id="address"
-            name="address"
-            placeholder="Enter address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </Credentials>
-
+    <Container>
+      <Form onSubmit={handleSubmit}>
+        <Wrapper>
+          <Credentials>
+            <Map />
+            <label htmlFor="name">First name:</label>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <label htmlFor="email">Email:</label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <label htmlFor="phone">Phone:</label>
+            <Input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="Enter phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <label htmlFor="address">address:</label>
+            <Input
+              type="text"
+              id="address"
+              name="address"
+              placeholder="Enter address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </Credentials>
+          {cart.length ? (
+            <CartList cartList={cart} />
+          ) : (
+            <li
+              style={{
+                fontSize: "30px",
+                alignSelf: "center",
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            >
+              Please add some products
+            </li>
+          )}
+        </Wrapper>
         {cart.length ? (
-          <CartList cartList={cart} />
-        ) : (
-          <li
-            style={{
-              fontSize: "30px",
-              alignSelf: "center",
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            Please add some products
-          </li>
-        )}
-      </Wrapper>
-      <Wrapper>
-        <Total>Total: {total} $</Total>
-        <SubmitButton type="submit" value="Submit" />
-      </Wrapper>
-    </Form>
+          <Wrapper>
+            <Total>Total: {total} $</Total>
+            <SubmitButton type="submit" value="Submit" />
+          </Wrapper>
+        ) : null}
+      </Form>
+    </Container>
   );
 }

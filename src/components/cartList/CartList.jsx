@@ -110,7 +110,7 @@ export default function CartList({ cartList }) {
   return (
     <List>
       {cartList.map((item) => (
-        <ListItem key={item.id}>
+        <ListItem key={item.item.name}>
           <Image src={burger} />
           <TextWrapper>
             <ProductTitle>{item.item.name}</ProductTitle>
