@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { changeQuantity, removeById } from "../../redux/cart/cart-slice";
 
