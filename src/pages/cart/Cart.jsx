@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { getCart } from "../../redux";
 import styled from "styled-components";
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
+// import { Wrapper, Status } from "@googlemaps/react-wrapper";
 
 import { useDispatch, useSelector } from "react-redux";
 import CartList from "../../components/cartList/CartList";
 import { erase } from "../../redux/cart/cart-slice";
 import operations from "../../redux/cart/cart-operations";
 import { Container } from "../../components/container/Container";
-import { Map } from "../../components/map/Map";
+// import { Map } from "../../components/map/Map";
 
 const Form = styled.form`
   font-size: 20px;
@@ -56,13 +56,10 @@ const SubmitButton = styled.input`
     background-color: gold;
   }
 `;
-const render = (status = Status) => {
-  return <h1>{status}</h1>;
-};
 
 export default function Cart() {
-  const center = { lat: 50.44988346087649, lng: 30.50705691859317 };
-  const zoom = 9;
+  // const center = { lat: 50.44988346087649, lng: 30.50705691859317 };
+  // const zoom = 9;
 
   const { cart } = useSelector(getCart);
   const dispatch = useDispatch();
@@ -108,12 +105,11 @@ export default function Cart() {
       <Form onSubmit={handleSubmit}>
         <WrapperDiv>
           <Credentials>
-            <Wrapper
-              apiKey={"AIzaSyAMDzQQxSb-a3Mf9qrdsoQxMd-yPYtzFUU"}
-              render={render}
-            >
+            {/* <Wrapper
+              apiKey={process.env.GOOGLE_API_KEY}
+                         >
               <Map center={center} zoom={zoom} />
-            </Wrapper>
+            </Wrapper> */}
 
             <label htmlFor="name">First name:</label>
             <Input
