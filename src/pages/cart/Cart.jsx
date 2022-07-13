@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { getCart } from "../../redux";
 import styled from "styled-components";
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+
 import { useDispatch, useSelector } from "react-redux";
 import CartList from "../../components/cartList/CartList";
-import { useState } from "react";
 import { erase } from "../../redux/cart/cart-slice";
 import operations from "../../redux/cart/cart-operations";
 import { Container } from "../../components/container/Container";
+import { Map } from "../../components/map/Map";
 
 const Form = styled.form`
   font-size: 20px;
@@ -14,16 +16,7 @@ const Form = styled.form`
   padding: 50px 40px;
 `;
 
-// ================= google map TODO
-const Map = styled.div`
-  display: inline-block;
-  width: 100%;
-  height: 200px;
-  border: 2px dashed grey;
-  border-radius: 5px;
-  background-color: lightgrey;
-`;
-const Wrapper = styled.div`
+const WrapperDiv = styled.div`
   display: flex;
   width: 100%;
   margin-bottom: 30px;
@@ -63,7 +56,14 @@ const SubmitButton = styled.input`
     background-color: gold;
   }
 `;
+const render = (status = Status) => {
+  return <h1>{status}</h1>;
+};
+
 export default function Cart() {
+  const center = { lat: 50.44988346087649, lng: 30.50705691859317 };
+  const zoom = 9;
+
   const { cart } = useSelector(getCart);
   const dispatch = useDispatch();
 
@@ -89,7 +89,6 @@ export default function Cart() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const newOrder = {
       name: name,
       email: email,
@@ -99,8 +98,6 @@ export default function Cart() {
       order: newData,
       sum: total,
     };
-
-    console.log(newOrder);
     dispatch(operations.postOrder(newOrder));
     alert("You order has been added. ");
     dispatch(erase());
@@ -109,9 +106,15 @@ export default function Cart() {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <Wrapper>
+        <WrapperDiv>
           <Credentials>
-            <Map />
+            <Wrapper
+              apiKey={"AIzaSyAMDzQQxSb-a3Mf9qrdsoQxMd-yPYtzFUU"}
+              render={render}
+            >
+              <Map center={center} zoom={zoom} />
+            </Wrapper>
+
             <label htmlFor="name">First name:</label>
             <Input
               type="text"
@@ -163,12 +166,12 @@ export default function Cart() {
               Please add some products
             </li>
           )}
-        </Wrapper>
+        </WrapperDiv>
         {cart.length ? (
-          <Wrapper>
+          <WrapperDiv>
             <Total>Total: {total} $</Total>
             <SubmitButton type="submit" value="Submit" />
-          </Wrapper>
+          </WrapperDiv>
         ) : null}
       </Form>
     </Container>
