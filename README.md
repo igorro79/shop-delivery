@@ -1,7 +1,2 @@
-перед запуском проекта, нужно запустить локально серверную часть из репозитория https://github.com/igorro79/shop-back (для подлючения БД с магазинами и товаром данные в readme.md )
+https://62cf0da3f3a67d1e7a853653--shop-delivery.netlify.app/
 
-по умолчанию на бекэнде PORT=3000. Так же он указан по умолчанию для axios (/shared/api/...)
-
-### `npm start`
-
-Open [http://localhost:5000]
