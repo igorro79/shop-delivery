@@ -1,19 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllOrders, addOrder } from "../../shared/api/cartApi";
 
-const postOrder = createAsyncThunk("cart", async (order) => {
-  console.log(order);
+const postOrder = createAsyncThunk("cart-order", async (order) => {
   try {
     const res = await addOrder(order);
-    return res;
+    return res.data;
   } catch (error) {
     console.log(error);
   }
 });
-const fetchOrders = createAsyncThunk("cart", async () => {
+const fetchOrders = createAsyncThunk("cart-history", async () => {
   try {
     const res = await getAllOrders();
-    return res;
+    return res.data;
   } catch (error) {
     console.log(error);
   }

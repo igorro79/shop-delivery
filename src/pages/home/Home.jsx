@@ -12,7 +12,7 @@ const Left = styled.div``;
 const Right = styled.div``;
 
 export default function Home({ shopList }) {
-  //===========disable links after choosing one==========
+  //===========disable shop links after choosing one==========
   const params = useParams();
   const links = document.querySelectorAll(`[data-name]`);
   params.hasOwnProperty("shop")

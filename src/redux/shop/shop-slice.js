@@ -17,7 +17,7 @@ export const shopSlice = createSlice({
     },
 
     [operation.fetchShopList.fulfilled]: (state, { payload }) => {
-      state.data = [...payload];
+      state.data = payload;
       state.isLoading = false;
     },
 
@@ -27,9 +27,5 @@ export const shopSlice = createSlice({
     },
   },
 });
-
-// Action creators are generated for each case reducer function
-// export const { add, remove, increment, decrement, incrementByAmount } =
-//   shopSlice.actions;
 
 export default shopSlice.reducer;

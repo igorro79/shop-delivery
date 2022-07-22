@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { getCart } from "../../redux";
 import styled from "styled-components";
-// import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import { useJsApiLoader } from "@react-google-maps/api";
 
 import { useDispatch, useSelector } from "react-redux";
 import CartList from "../../components/cartList/CartList";
 import { erase } from "../../redux/cart/cart-slice";
 import operations from "../../redux/cart/cart-operations";
 import { Container } from "../../components/container/Container";
-// import { Map } from "../../components/map/Map";
+import Map from "../../components/map/Map";
+import { Autocomplite } from "../../components/autocomplite/Autocomplite";
 
 const Form = styled.form`
   font-size: 20px;
-  width: 90%;
   padding: 50px 40px;
 `;
 
@@ -35,6 +35,12 @@ const Input = styled.input`
   padding: 10px 15px;
   border-radius: 5px;
 `;
+const EmptyCart = styled.li`
+  font-size: 30px;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+`;
 const Total = styled.span`
   font-size: 30px;
   font-weight: 700;
@@ -56,13 +62,21 @@ const SubmitButton = styled.input`
     background-color: gold;
   }
 `;
+const libraries = ["places"];
+const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 export default function Cart() {
-  // const center = { lat: 50.44988346087649, lng: 30.50705691859317 };
-  // const zoom = 9;
-
   const { cart } = useSelector(getCart);
   const dispatch = useDispatch();
+
+  const defaultCenter = { lat: 50.4498, lng: 30.507 };
+  const [center, setCenter] = useState(defaultCenter);
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: API_KEY,
+    libraries,
+  });
 
   const total = cart.reduce(function (acc, next) {
     return acc + next.item.price * next.quantity;
@@ -73,16 +87,14 @@ export default function Cart() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
-  const newData = cart.map((product) =>
-    Object.create(
-      {},
-      {
-        name: { value: product.item.name },
-        price: { value: product.item.price },
-        quantity: { value: product.quantity },
-      }
-    )
-  );
+  const goods = cart.map((product) => {
+    const temp = {
+      name: product.item.name,
+      price: product.item.price,
+      quantity: product.quantity,
+    };
+    return temp;
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -92,27 +104,28 @@ export default function Cart() {
       phone: phone,
       address: address,
       shop: cart[0].shop,
-      order: newData,
+      order: goods,
       sum: total,
     };
+    // console.log(newOrder);
     dispatch(operations.postOrder(newOrder));
     alert("You order has been added. ");
     dispatch(erase());
+    setName("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
   };
-
+  const onSelect = useCallback((coordinates) => setCenter(coordinates), []);
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
         <WrapperDiv>
           <Credentials>
-            {/* <Wrapper
-              apiKey={process.env.GOOGLE_API_KEY}
-                         >
-              <Map center={center} zoom={zoom} />
-            </Wrapper> */}
-
+            {isLoaded ? <Map center={center} /> : <h2>Loading...</h2>}
             <label htmlFor="name">First name:</label>
             <Input
+              required
               type="text"
               id="name"
               name="name"
@@ -122,6 +135,7 @@ export default function Cart() {
             />
             <label htmlFor="email">Email:</label>
             <Input
+              required
               type="email"
               id="email"
               name="email"
@@ -131,6 +145,7 @@ export default function Cart() {
             />
             <label htmlFor="phone">Phone:</label>
             <Input
+              required
               type="tel"
               id="phone"
               name="phone"
@@ -139,28 +154,17 @@ export default function Cart() {
               onChange={(e) => setPhone(e.target.value)}
             />
             <label htmlFor="address">address:</label>
-            <Input
-              type="text"
-              id="address"
-              name="address"
-              placeholder="Enter address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+            <Autocomplite
+              isLoaded={isLoaded}
+              onSelect={onSelect}
+              passValue={setAddress}
+              reset={address}
             />
           </Credentials>
           {cart.length ? (
             <CartList cartList={cart} />
           ) : (
-            <li
-              style={{
-                fontSize: "30px",
-                alignSelf: "center",
-                marginLeft: "auto",
-                marginRight: "auto",
-              }}
-            >
-              Please add some products
-            </li>
+            <EmptyCart>Please add some products</EmptyCart>
           )}
         </WrapperDiv>
         {cart.length ? (

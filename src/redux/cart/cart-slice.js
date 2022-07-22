@@ -29,7 +29,7 @@ export const cartSlice = createSlice({
 
     changeQuantity: (state, { payload }) => {
       state.cart.forEach((item) =>
-        item.id === payload.itemId && Number(item.quantity) >= 1
+        item.id === payload.itemId && Number(item.quantity) >= 0
           ? (item.quantity = Number(payload.newValue))
           : null
       );
@@ -50,7 +50,7 @@ export const cartSlice = createSlice({
     },
 
     [operation.postOrder.fulfilled]: (state, { payload }) => {
-      state.lastOrder = payload.data;
+      state.lastOrder = payload;
     },
 
     [operation.postOrder.rejected]: (state, { error }) => {

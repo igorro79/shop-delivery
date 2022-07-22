@@ -23,18 +23,17 @@ const List = styled.ul`
 const ListItem = styled.li`
   position: relative;
   display: flex;
+
   padding: 30px 20px;
   border: 1px solid silver;
 `;
 const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  // border: 1px solid grey;
   width: 200px;
-  // padding: 10px;
 `;
 const Image = styled.img`
-  width: 200px;
+  width: 100%;
   height: 120px;
   margin-right: 20px;
 `;
@@ -76,32 +75,6 @@ const RemoveButton = styled.button`
     background-color: #8a202e;
   }
 `;
-
-// const CustomLink = styled(NavLink)`
-//   display: flex;
-//   font-size: 24px;
-//   background-color: #fafafa;
-//   color: inherit;
-//   box-shadow: 2px 2px 5px 1px;
-//   padding: 10px 20px;
-//   border: 2px solid silver;
-//   border-radius: 5px;
-//   text-decoration: none;
-//   &:hover {
-//     background-color: grey;
-//     color: #fff;
-//   }
-//   &.active {
-//     background-color: green;
-//     color: #fff;
-//   }
-//   &: visited {
-//     &:hover {
-//       background-color: grey;
-//       color: #fff;
-//     }
-//   }
-// `;
 
 export default function CartList({ cartList }) {
   const dispatch = useDispatch();

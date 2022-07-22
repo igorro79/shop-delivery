@@ -15,7 +15,8 @@ export default function Home() {
             padding: "20px 40px",
           }}
         >
-          <Link to="/">Home</Link> | <Link to="cart">Cart</Link>
+          <Link to="/">Home</Link> | <Link to="cart">Cart</Link> |{" "}
+          <Link to="history">History</Link>
         </nav>
       </Container>
     </header>

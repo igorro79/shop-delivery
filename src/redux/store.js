@@ -23,6 +23,7 @@ const middleware = [
 const cartPersistConfig = {
   key: "cart",
   storage,
+  whitelist: ["cart"],
 };
 const persistedReducer = persistReducer(cartPersistConfig, cartReducer);
 

@@ -5,10 +5,9 @@ import operation from "./redux/shop/shop-operations";
 import { add, erase } from "./redux/cart/cart-slice";
 import { getShops } from "./redux";
 
-import "./App.css";
-
 import Home from "./pages/home/Home";
 import Cart from "./pages/cart/Cart";
+import History from "./pages/history/History";
 import ProductList from "./components/productList/ProductList";
 import Header from "./components/header/Header";
 
@@ -53,14 +52,16 @@ function App() {
     <>
       <Header />
       <Routes>
+        <Route path="history" element={<History shopList={data} />} />
         <Route path="/" element={<Home shopList={data} />}>
-          {data.map((shop) => (
-            <Route
-              key={shop._id}
-              path=":shop"
-              element={<ProductList onClick={handleAddButton} />}
-            />
-          ))}
+          {data &&
+            data.map((shop) => (
+              <Route
+                key={shop._id}
+                path=":shop"
+                element={<ProductList onClick={handleAddButton} />}
+              />
+            ))}
         </Route>
         <Route path="cart" element={<Cart />} />
       </Routes>

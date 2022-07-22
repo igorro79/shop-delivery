@@ -17,6 +17,7 @@ const List = styled.ul`
   gap: 10px;
 `;
 const ListItem = styled.li`
+  width: 200px;
   margin: 0;
   padding: 0;
 `;
@@ -25,10 +26,10 @@ const Thumb = styled.div`
   display: flex;
   flex-direction: column;
   border: 1px solid grey;
-  width: 200px;
+  width: 100%;
 `;
 const Image = styled.img`
-  width: 200px;
+  width: 100%;
   height: 120px;
 `;
 const Wrapper = styled.div`
